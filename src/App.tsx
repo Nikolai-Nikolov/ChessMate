@@ -2,10 +2,12 @@ import { createRoot } from 'react-dom/client';
 import Board from './Board';
 import { Provider } from 'react-redux';
 import store from './store';
+import Home from './Home';
 
 const App = () => {
   return (
     <Provider store={store}>
+      <Home></Home>
       <Board asViewedByWhite={true} />
     </Provider>
   );
