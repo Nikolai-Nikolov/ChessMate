@@ -1,18 +1,26 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState } from './store';
 
 export type Piece = {
   type: 'pawn' | 'rook' | 'knight' | 'bishop' | 'queen' | 'king';
   color: 'white' | 'black';
+  currentPosition: string | null;
 };
 
 export type SquareProps = {
-  id: string;
   occupied_by: Piece | null;
 };
 
 export type BoardState = {
-  value: SquareProps[];
+  value: {
+    [key:string]: SquareProps;
+  }
+};
+
+export type MovePayload = {
+  to: string | undefined;
+  from: string;
+  piece: Piece;
+  moves: string[];
 };
 
 const boardSquares = Array.from('ABCDEFGH').map((file) => {
@@ -21,66 +29,82 @@ const boardSquares = Array.from('ABCDEFGH').map((file) => {
   });
 });
 
-const initialState: BoardState = {
-  value: boardSquares.flat().map((square) => {
-    return {
-      id: square,
-      occupied_by: null
-    };
+const initializeState = () => {
+  const obj: { [key:string]: SquareProps } = {};
+  boardSquares.flat().forEach((id) => {
+    obj[id] = { occupied_by: null}
   })
-};
+  return obj;
+}
+
+const initialState: BoardState = {
+  value: initializeState()
+}
 
 const initializeBoard = (state: BoardState) => {
-  state.value.map((square) => {
+  for (const square in state.value) {
     switch (true) {
-      case /2/.test(square.id):
-        square.occupied_by = { type: 'pawn', color: 'white' };
+      case /2/.test(square):
+        state.value[square].occupied_by = { type: 'pawn', color: 'white', currentPosition: square };
         break;
-      case /7/.test(square.id):
-        square.occupied_by = { type: 'pawn', color: 'black' };
+      case /7/.test(square):
+        state.value[square].occupied_by = { type: 'pawn', color: 'black', currentPosition: square };
         break;
-      case ['A1', 'H1'].includes(square.id):
-        square.occupied_by = { type: 'rook', color: 'white' };
+      case ['A1', 'H1'].includes(square):
+        state.value[square].occupied_by = { type: 'rook', color: 'white', currentPosition: square };
         break;
-      case ['A8', 'H8'].includes(square.id):
-        square.occupied_by = { type: 'rook', color: 'black' };
+      case ['A8', 'H8'].includes(square):
+        state.value[square].occupied_by = { type: 'rook', color: 'black', currentPosition: square };
         break;
-      case ['B1', 'G1'].includes(square.id):
-        square.occupied_by = { type: 'knight', color: 'white' };
+      case ['B1', 'G1'].includes(square):
+        state.value[square].occupied_by = { type: 'knight', color: 'white', currentPosition: square };
         break;
-      case ['B8', 'G8'].includes(square.id):
-        square.occupied_by = { type: 'knight', color: 'black' };
+      case ['B8', 'G8'].includes(square):
+        state.value[square].occupied_by = { type: 'knight', color: 'black', currentPosition: square };
         break;
-      case ['C1', 'F1'].includes(square.id):
-        square.occupied_by = { type: 'bishop', color: 'white' };
+      case ['C1', 'F1'].includes(square):
+        state.value[square].occupied_by = { type: 'bishop', color: 'white', currentPosition: square };
         break;
-      case ['C8', 'F8'].includes(square.id):
-        square.occupied_by = { type: 'bishop', color: 'black' };
+      case ['C8', 'F8'].includes(square):
+        state.value[square].occupied_by = { type: 'bishop', color: 'black', currentPosition: square };
         break;
-      case square.id == 'D1':
-        square.occupied_by = { type: 'queen', color: 'white' };
+      case square == 'D1':
+        state.value[square].occupied_by = { type: 'queen', color: 'white', currentPosition: square };
         break;
-      case square.id == 'E1':
-        square.occupied_by = { type: 'king', color: 'white' };
+      case square == 'E1':
+        state.value[square].occupied_by = { type: 'king', color: 'white', currentPosition: square };
         break;
-      case square.id == 'D8':
-        square.occupied_by = { type: 'queen', color: 'black' };
+      case square == 'D8':
+        state.value[square].occupied_by = { type: 'queen', color: 'black', currentPosition: square };
         break;
-      case square.id == 'E8':
-        square.occupied_by = { type: 'king', color: 'black' };
+      case square == 'E8':
+        state.value[square].occupied_by = { type: 'king', color: 'black', currentPosition: square };
         break;
+      default:
+        state.value[square].occupied_by = null;
     }
-  });
+  };
+};
+
+const move = (state: BoardState, payload: MovePayload) => {
+  if (payload.from && payload.to && payload.from !== payload.to) {
+
+    if (payload.from && payload.to && payload.moves.includes(payload.to)) {
+      state.value[payload.from].occupied_by = null;
+      state.value[payload.to].occupied_by = payload.piece;
+    }
+  }
 };
 
 export const boardSlice = createSlice({
   name: 'board',
   initialState,
   reducers: {
-    initialize: (state) => initializeBoard(state)
+    initialize: (state) => initializeBoard(state),
+    movePiece: (state, action: PayloadAction<MovePayload>) => move(state, action.payload)
   }
 });
 
-export const { initialize } = boardSlice.actions;
+export const { initialize, movePiece } = boardSlice.actions;
 
 export default boardSlice.reducer;
