@@ -1,10 +1,13 @@
 import { createRoot } from 'react-dom/client';
+import Board from './Board';
+import { Provider } from 'react-redux';
+import store from './store';
 
 const App = () => {
   return (
-    <div>
-      <h1>Welcome to ChessMate</h1>
-    </div>
+    <Provider store={store}>
+      <Board asViewedByWhite={true} />
+    </Provider>
   );
 };
 

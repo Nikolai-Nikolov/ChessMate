@@ -1,28 +1,38 @@
+import Square from './Square';
+import { Piece, SquareProps } from './boardSlice';
+import { useAppSelector } from './hooks';
+
 const files: string[] = Array.from('ABCDEFGH');
 const rows: string[] = Array.from('12345678');
 
-const Squares = ({ asViewedByWhite = true }: { asViewedByWhite: boolean }) => {
+const Squares = ({ asViewedByWhite }: { asViewedByWhite: boolean }) => {
   const [firstRow, firstCol] = asViewedByWhite ? [0, 0] : [7, 7];
+  const className = `flex flex-col${asViewedByWhite ? '-reverse' : ''}`;
+
+  const board = useAppSelector((state) => state.board.value);
+
+  const getSquareProps = (id: string): Piece | null => {
+    const field: SquareProps | null = board.find((square: SquareProps) => square?.id === id) ?? null;
+    
+    return field?.occupied_by ?? null;
+  };
 
   return files.map((file, i) => {
     return (
-      <div key={i} className={`flex flex-col${asViewedByWhite ? '-reverse' : ''}`}>
+      <div key={i} className={'flex ' + className}>
         {rows.map((row, j) => {
           return (
-            <div
-              key={j}
-              id={`${file}${row}`}
-              className={`size-24 ${(i % 2 === 0 && j % 2 === 0) || (i % 2 !== 0 && j % 2 !== 0) ? 'bg-yellow-600' : 'bg-orange-100'}`}
-            >
-              <div className="relative min-h-full">
-                {j === firstRow ? (
-                  <sub className="absolute right-1 bottom-1 text-xs">{file}</sub>
-                ) : null}
-                {i === firstCol ? (
-                  <sup className="absolute left-1 top-1 text-xs">{row}</sup>
-                ) : null}
-              </div>
-            </div>
+            <Square key={file+row}
+              {...{
+                file,
+                row,
+                firstRow,
+                firstCol,
+                i,
+                j,
+                occupied_by: getSquareProps(`${file}${row}`)
+              }}
+            />
           );
         })}
       </div>

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "test",
-    "format": "prettier --write \"src/**/*.{js,jsx}\"",
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
     "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\" --quiet",
     "dev": "vite",
     "build": "vite build",
@@ -16,8 +16,10 @@
   "author": "Nikolai Nikolov",
   "license": "ISC",
   "dependencies": {
+    "@reduxjs/toolkit": "^2.2.2",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-redux": "^9.1.0"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^1.2.25",
@@ -26,6 +28,7 @@
     "@storybook/addon-interactions": "^8.0.4",
     "@storybook/addon-links": "^8.0.4",
     "@storybook/addon-onboarding": "^8.0.4",
+    "@storybook/addon-styling-webpack": "^1.0.0",
     "@storybook/blocks": "^8.0.4",
     "@storybook/react": "^8.0.4",
     "@storybook/react-vite": "^8.0.4",

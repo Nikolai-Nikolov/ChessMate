@@ -24,24 +24,3 @@ export const WhitePawn: Story = {
     color: 'white'
   }
 };
-
-export const BlackPawn: Story = {
-  args: {
-    type: 'pawn',
-    color: 'black'
-  }
-};
-
-// export const Large: Story = {
-//   args: {
-//     size: 'large',
-//     label: 'Button',
-//   },
-// };
-
-// export const Small: Story = {
-//   args: {
-//     size: 'small',
-//     label: 'Button',
-//   },
-// };

@@ -1,14 +1,23 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import Board from '../Board';
+import { Provider } from 'react-redux';
+import store from '../store';
 
 const meta = {
   title: 'Resources/Board',
   component: Board,
+  decorators: [
+    (Story) => (
+      <Provider store={store}>
+        <Story />
+      </Provider>
+    )
+  ],
   parameters: {
-    layout: 'centered',
+    layout: 'centered'
   },
   tags: ['autodocs'],
-  args: { asViewedByWhite: true },
+  args: { asViewedByWhite: true }
 } satisfies Meta<typeof Board>;
 
 export default meta;
@@ -18,25 +27,11 @@ type Story = StoryObj<typeof meta>;
 export const WhitePlayer: Story = {
   args: {
     asViewedByWhite: true
-  },
+  }
 };
 
 export const BlackPlayer: Story = {
   args: {
-    asViewedByWhite: false,
-  },
+    asViewedByWhite: false
+  }
 };
-
-// export const Large: Story = {
-//   args: {
-//     size: 'large',
-//     label: 'Button',
-//   },
-// };
-
-// export const Small: Story = {
-//   args: {
-//     size: 'small',
-//     label: 'Button',
-//   },
-// };
